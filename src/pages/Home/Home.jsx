@@ -4,7 +4,7 @@ import Map from '../../components/Map/Map';
 
 const Home = () => {
     return (
-        <div className='container'>
+        <div className='map-container'>
             <Map/>
         </div>
     );

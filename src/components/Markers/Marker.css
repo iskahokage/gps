@@ -1,0 +1,7 @@
+
+
+@media screen and (width < 500px) {
+  .marker-container{
+    padding: 0 10px;
+  }
+}

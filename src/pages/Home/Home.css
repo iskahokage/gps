@@ -1,8 +1,14 @@
-.container{
+.map-container {
     max-width: 1200px;
     margin: 100px auto 0px auto;
     background-color: #a9a9a9;
     border-radius: 10px;
     box-shadow: #000 3px 3px 5px;
     height: calc(100vh - 200px);
+}
+@media screen and (width < 600px) {
+    .map-container {
+        margin: 0 auto;
+        height: 100vh;
+    }
 }
