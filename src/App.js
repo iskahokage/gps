@@ -4,17 +4,24 @@ import Home from './pages/Home/Home';
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
 import Header from './components/Header/Header';
-import Marker from './components/Markers/Marker';
 import Driver from './components/Drivers/Driver';
+import MarkerList from './components/Markers/MarkerList';
+import { useEffect } from 'react';
+import { fetchMarkers } from './redux/markers/markerSlice';
+import Marker from './components/Markers/Marker';
 
 function App() {
+  useEffect(() => {
+    store.dispatch(fetchMarkers())
+  }, [store])
   return (
     <Provider store={store}>
       <BrowserRouter>
         <Header/>
         <Routes>
           <Route index element={<Home />} />
-          <Route path='/marker' element={<Marker />} />
+          <Route path='/markers' element={<MarkerList />} />
+          <Route path='/marker/:id' element={<Marker />} />
           <Route path='/driver' element={<Driver />} />
         </Routes>
       </BrowserRouter>

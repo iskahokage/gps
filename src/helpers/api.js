@@ -10,6 +10,24 @@ export const postData = async(path, payload) => {
         console.error(error)
     }
 }
+export const getData = async(path) => {
+    try {
+        const {data} = await axios.get(baseUrl + path);
+        return data
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const patchData = async(path, payload) => {
+    try {
+        const {data, status} = await axios.patch(baseUrl + path, payload);
+        return {data, status}
+    } catch (error) {
+        return {status: error.response.status, msg: error.response.data}
+    }
+}
+
 
 const api = axios.create()
 

@@ -87,15 +87,12 @@ const Driver = () => {
                     </Form.Group>
                     <Form.Group as={Col} md="4" controlId="validationCustomUsername">
                         <Form.Label>Отчество</Form.Label>
-                        <InputGroup hasValidation>
+                        <InputGroup>
                             <Form.Control
                                 type="text"
                                 name='middleName'
                                 onChange={handleFIO}
                             />
-                            <Form.Control.Feedback type="invalid">
-                                Введите отчество
-                            </Form.Control.Feedback>
                         </InputGroup>
                     </Form.Group>
                 </Row>

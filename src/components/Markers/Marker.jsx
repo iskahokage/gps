@@ -1,94 +1,77 @@
-import React from 'react';
-import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
+import React, { useEffect, useState } from 'react';
 import './Marker.css'
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchMarkerById } from '../../redux/markers/markerSlice';
+import { fetchDrivers } from '../../redux/drivers/driverSlice';
+import { Alert, Button, Col, Form, Row } from 'react-bootstrap';
+import { patchData } from '../../helpers/api';
+import { handleAlert } from '../../helpers/helpers';
 
 const Marker = () => {
-    const [validated, setValidated] = useState(false);
 
-    const handleSubmit = (event) => {
-      const form = event.currentTarget;
-      if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-  
-      setValidated(true);
-    };
-  
+    const { id } = useParams();
+    const { selectedMarker, status, error } = useSelector((state) => state.markers);
+    const { drivers } = useSelector(state => state.drivers)
+    const [selectedDriver, setSelectedDriver] = useState()
+    const [alert, setAlert] = useState({
+        visible: false,
+        variant: '',
+        msg: ''
+    });
+
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (id) {
+            dispatch(fetchMarkerById(id));
+        }
+        dispatch(fetchDrivers())
+    }, [dispatch, id])
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        const data = {
+            ...selectedMarker,
+            driver: selectedDriver
+        }
+        const {status, msg} =  await patchData(`/main_app/item/${id}/`, data)
+        console.log(status, msg)
+        handleAlert(status, setAlert, msg)
+    }
+
+    
+
+    if (status === 'loading') {
+        return <div>Loading...</div>;
+    }
+
+    if (status === 'failed') {
+        return <div>Error: {error}</div>;
+    }
+
     return (
         <div className='marker-container'>
-            <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Alert variant={alert.variant} show={alert.visible} dismissible>
+                <Alert.Heading>{alert.msg}</Alert.Heading>
+            </Alert>
+            <Form onSubmit={handleSubmit}>
                 <Row className="mb-3">
-                    <Form.Group as={Col} md="4" controlId="validationCustom01">
-                        <Form.Label>Фамилия</Form.Label>
-                        <Form.Control
-                            required
-                            type="text"
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            Please choose a username.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} md="4" controlId="validationCustom02">
-                        <Form.Label>Имя</Form.Label>
-                        <Form.Control
-                            required
-                            type="text"
-                        />
-                        <Form.Control.Feedback type="invalid">
-                            Please choose a username.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} md="4" controlId="validationCustomUsername">
-                        <Form.Label>Отчество</Form.Label>
-                        <InputGroup hasValidation>
-                            <Form.Control
-                                type="text"
-                                required
-                            />
-                            <Form.Control.Feedback type="invalid">
-                                Please choose a username.
-                            </Form.Control.Feedback>
-                        </InputGroup>
+                    <h2>Передатчик</h2>
+                    <Form.Group as={Col} md="6">
+                        <Form.Label>Выберите водителя</Form.Label>
+                        <Form.Select onChange={e => setSelectedDriver(e.target.value)}>
+                            <option hidden>Выберите водителя</option>
+                            {drivers.map(el => {
+                                return (
+                                    <option selected={selectedMarker?.driver === el.id ? true : false} value={el.id} key={el.id} className='d-flex justify-content-between'><p>{el.fio}</p> <p>{el.car_number}</p></option>
+                                )
+                            })}
+                        </Form.Select>
                     </Form.Group>
                 </Row>
-                <Row className="mb-3">
-                    <Form.Group as={Col} md="6" controlId="validationCustom03">
-                        <Form.Label></Form.Label>
-                        <Form.Control type="text" placeholder="City" required />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid city.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} md="3" controlId="validationCustom04">
-                        <Form.Label>State</Form.Label>
-                        <Form.Control type="text" placeholder="State" required />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid state.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                    <Form.Group as={Col} md="3" controlId="validationCustom05">
-                        <Form.Label>Zip</Form.Label>
-                        <Form.Control type="text" placeholder="Zip" required />
-                        <Form.Control.Feedback type="invalid">
-                            Please provide a valid zip.
-                        </Form.Control.Feedback>
-                    </Form.Group>
-                </Row>
-                <Form.Group className="mb-3">
-                    <Form.Check
-                        required
-                        label="Agree to terms and conditions"
-                        feedback="You must agree before submitting."
-                        feedbackType="invalid"
-                    />
-                </Form.Group>
-                <Button type="submit">Submit form</Button>
+                <Button type="submit">Сохранить маркер</Button>
             </Form>
 
         </div>
