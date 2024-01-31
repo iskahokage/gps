@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const baseUrl = 'http://159.89.169.153:8000';
+export const baseUrl = 'http://143.110.227.17:8000';
 
 export const postData = async(path, payload) => {
     try {
