@@ -22,7 +22,7 @@ const Map = ({ markers }) => {
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
             {
-                markers.map(el => {
+                markers?.map(el => {
                     return (
                         <Marker key={el.id} position={[el.latitude, el.longitude]} icon={customIcon}>
                             <Popup>

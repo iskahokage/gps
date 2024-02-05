@@ -3,11 +3,11 @@ import { baseUrl, getData } from '../../helpers/api';
 
 // Создаем асинхронный thunk для загрузки списка пользователей
 export const fetchMarkers = createAsyncThunk('users/fetchMarkers', async () => {
-  const data = await getData('/main_app/item/');
+  const data = await getData('/backoffice/gis/');
   return data;
 });
 export const fetchMarkerById = createAsyncThunk('markers/fetchMarkerById', async (markerId) => {
-  const data = await getData(`/main_app/item/${markerId}`);
+  const data = await getData(`/backoffice/gis/${markerId}`);
   return data;
 });
 // Создаем slice для хранения состояния пользователей

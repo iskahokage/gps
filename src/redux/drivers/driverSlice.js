@@ -3,7 +3,7 @@ import { baseUrl, getData } from '../../helpers/api';
 
 // Создаем асинхронный thunk для загрузки списка пользователей
 export const fetchDrivers = createAsyncThunk('users/fetchDrivers', async () => {
-  const data = await getData('/main_app/driver/');
+  const data = await getData('/backoffice/driver/');
   return data;
 });
 // Создаем slice для хранения состояния пользователей
